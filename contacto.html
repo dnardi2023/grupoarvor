@@ -3,86 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planes de ahorro para tu 0km: cómo funcionan — Blog Grupo Arvor</title>
-<meta name="description" content="Cuotas, adjudicaciones y cuándo conviene un plan de ahorro para acceder a tu 0km.">
+<title>Contacto — Grupo Arvor</title>
+<meta name="description" content="Escribinos. Te acompañamos con movilidad, financiación, energía o tu próximo paso profesional en Grupo Arvor.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/arvor.css">
-<script src="/assets/analytics.js"></script>
+<link rel="stylesheet" href="arvor.css">
+<script src="analytics.js"></script>
 </head>
 <body>
 <div id="progress" aria-hidden="true"></div>
 
 <nav id="nav">
-  <a class="logo-link" href="/" aria-label="Grupo Arvor — inicio"><img class="logo-mark" src="/assets/arvor-logo-white.svg" alt="Grupo Arvor"></a>
+  <a class="logo-link" href="index.html" aria-label="Grupo Arvor — inicio"><img class="logo-mark" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
   <div class="nav-links">
-    <a href="/#grupo">Sobre nosotros</a>
-    <a href="/#empresas">Ecosistema</a>
-    <a href="/blog" class="active">Blog</a>
-    <a href="/contacto">Contacto</a>
-    <a href="/#sumate" class="nav-cta">Sumate</a>
+    <a href="index.html#grupo">Sobre nosotros</a>
+    <a href="index.html#empresas">Ecosistema</a>
+    <a href="blog.html">Blog</a>
+    <a href="contacto.html" class="active">Contacto</a>
+    <a href="index.html#sumate" class="nav-cta">Sumate</a>
   </div>
 </nav>
 
-<header class="article-hero">
-  <div class="cover" style="background:linear-gradient(135deg,#0a2230,#15a9c9)" aria-hidden="true"></div>
+<header class="page-hero aurora-bg">
+  <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
   <div class="wrap">
-    <a class="back" href="/blog">← Volver al blog</a>
-    <div class="tagcat">Finanzas</div>
-    <h1>Planes de ahorro para tu 0km: cómo funcionan y cuándo conviene</h1>
-    <div class="meta"><span>Equipo Grupo Arvor</span><span class="dot"></span><span>15 jul 2026</span><span class="dot"></span><span>6 min de lectura</span></div>
+    <span class="eyebrow">Contacto</span>
+    <h1>Hablemos de tu <span class="grad">próximo paso</span></h1>
+    <p class="sub">Ya sea tu próximo auto, un plan de ahorro, un servicio para tu operación o sumarte al equipo: dejanos tus datos y te contactamos.</p>
   </div>
 </header>
 
-<article class="article">
-  <p class="lead">El plan de ahorro es una de las vías más elegidas para acceder a un 0km. Entender cómo funciona te ayuda a decidir si es la opción indicada para vos.</p>
+<section class="form-section">
+  <div class="wrap">
+    <div class="form-grid">
 
-  <p>La idea es simple: un grupo de personas aporta una cuota mensual para financiar, entre todas, la compra de vehículos. Mes a mes se adjudican unidades, hasta que cada integrante recibe la suya. Es un mecanismo pensado para acceder de forma ordenada y previsible.</p>
+      <div class="form-aside reveal">
+        <h2>Estamos cerca</h2>
+        <p>Somos un grupo patagónico con base en Neuquén. Escribinos y te va a responder la persona indicada según lo que necesites.</p>
+        <div class="info">
+          <div><span class="ic" aria-hidden="true">◈</span><span>Neuquén · Río Negro, Patagonia Argentina</span></div>
+          <div><span class="ic" aria-hidden="true">◈</span><span>Automotriz · Finanzas · Logística · Oil&nbsp;&amp;&nbsp;Gas</span></div>
+          <div><span class="ic" aria-hidden="true">◈</span><a href="https://www.linkedin.com/company/grupo-arvor/" target="_blank" rel="noopener" style="color:var(--teal)">Seguinos en LinkedIn →</a></div>
+        </div>
+      </div>
 
-  <h2>Cómo se compone la cuota</h2>
-  <p>La cuota suele incluir la parte del valor del vehículo (alícuota), más gastos administrativos y seguros. Como se calcula sobre el precio del 0km, puede ajustarse cuando ese valor cambia. Por eso conviene mirar el total, no solo el número inicial.</p>
+      <div class="form-card reveal" data-d="1">
+        <form id="contact-form" novalidate>
+          <input type="hidden" name="origen" value="web-contacto">
 
-  <h2>Adjudicación: las dos formas</h2>
-  <ul>
-    <li><strong>Por sorteo:</strong> cada mes puede tocarte sin costo adicional. Es la parte "de suerte" del plan.</li>
-    <li><strong>Por licitación:</strong> ofrecés adelantar cuotas para acceder antes. Quien más ofrece, se adjudica.</li>
-  </ul>
+          <div class="field two">
+            <div>
+              <label for="nombre">Nombre y apellido <span class="req">*</span></label>
+              <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+              <div class="err">Contanos tu nombre.</div>
+            </div>
+            <div>
+              <label for="telefono">Teléfono</label>
+              <input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel">
+              <div class="err"></div>
+            </div>
+          </div>
 
-  <blockquote>La clave no es solo cuánto pagás por mes, sino cuándo vas a tener el auto y qué pasa hasta que lo recibís.</blockquote>
+          <div class="field">
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+            <div class="err">Ingresá un email válido.</div>
+          </div>
 
-  <h2>Cuándo conviene</h2>
-  <p>El plan de ahorro es una buena opción si:</p>
-  <ul>
-    <li>Querés acceder a un 0km de forma programada, sin un desembolso inicial grande.</li>
-    <li>Podés sostener una cuota mensual estable en el tiempo.</li>
-    <li>No tenés urgencia total: si te toca por sorteo, llegás antes; si no, seguís aportando.</li>
-  </ul>
-  <p>Si en cambio necesitás el auto ya y contás con parte del capital, quizás un crédito prendario se ajuste mejor. No hay una respuesta única: depende de tu horizonte y tu flujo.</p>
+          <div class="field">
+            <label for="interes">¿En qué te podemos ayudar? <span class="req">*</span></label>
+            <select id="interes" name="interes" required>
+              <option value="" selected disabled>Elegí una opción…</option>
+              <option>Comprar un auto (0km o usado)</option>
+              <option>Plan de ahorro</option>
+              <option>Financiación / crédito</option>
+              <option>Oil &amp; Gas / servicios</option>
+              <option>Trabajá con nosotros</option>
+              <option>Otro</option>
+            </select>
+            <div class="err">Elegí una opción.</div>
+          </div>
 
-  <h2>Preguntá antes de firmar</h2>
-  <p>Antes de suscribir, revisá: valor de la cuota y qué incluye, cómo se ajusta, condiciones de adjudicación, qué pasa si querés dar de baja y qué respaldo hay detrás del plan. Un buen asesor te explica todo esto en criollo.</p>
-  <p>En Grupo Arvor, <strong>Akira</strong> es la comercializadora de Planes de Ahorro, y <strong>Credinet</strong> suma soluciones de crédito automotor para cuando conviene combinar herramientas. La idea es encontrar el camino que mejor se adapte a vos.</p>
-</article>
+          <div class="field">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Contanos un poco más…"></textarea>
+            <div class="err"></div>
+          </div>
 
-<div class="article-cta reveal">
-  <h3>¿Te asesoramos con tu plan?</h3>
-  <p>Contanos qué auto buscás y te ayudamos a encontrar la mejor forma de acceder.</p>
-  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-    <a class="btn btn-primary" href="/contacto">Quiero que me contacten</a>
-    <a class="btn btn-ghost" href="/#empresas">Ver el ecosistema</a>
+          <label class="consent">
+            <input type="checkbox" id="consent" name="consent" required>
+            <span>Acepto ser contactado/a por Grupo Arvor y el tratamiento de mis datos para responder mi consulta.</span>
+          </label>
+
+          <button type="submit" class="btn btn-primary submit" id="submit-btn">Enviar consulta</button>
+          <p class="form-note">Te respondemos a la brevedad. Tus datos se usan solo para contactarte.</p>
+        </form>
+      </div>
+
+    </div>
   </div>
-</div>
+</section>
 
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <a class="logo-link" href="/"><img class="logo-mark" style="height:30px" src="/assets/arvor-logo-white.svg" alt="Grupo Arvor"></a>
+      <a class="logo-link" href="index.html"><img class="logo-mark" style="height:30px" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
       <div class="foot-links">
-        <a href="/#grupo">Sobre nosotros</a>
-        <a href="/#empresas">Ecosistema</a>
-        <a href="/blog">Blog</a>
-        <a href="/contacto">Contacto</a>
+        <a href="index.html#grupo">Sobre nosotros</a>
+        <a href="index.html#empresas">Ecosistema</a>
+        <a href="blog.html">Blog</a>
+        <a href="contacto.html">Contacto</a>
         <a href="https://www.linkedin.com/company/grupo-arvor/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
@@ -90,6 +121,52 @@
   </div>
 </footer>
 
-<script src="/assets/site.js"></script>
+<script src="site.js"></script>
+<script>
+  /* ====== CONFIG: pegá acá la URL del Web App de Apps Script (termina en /exec) ====== */
+  const FORM_ENDPOINT = "PEGAR_URL_DEL_APPS_SCRIPT_AQUI";
+
+  const form = document.getElementById("contact-form");
+  const btn = document.getElementById("submit-btn");
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setInvalid(el, bad){
+    const field = el.closest(".field") || el.closest(".consent");
+    if (!field) return;
+    field.classList.toggle("invalid", bad);
+  }
+  function validate(){
+    let ok = true;
+    const nombre = form.nombre, email = form.email, interes = form.interes, consent = form.consent;
+    const nb = !nombre.value.trim(); setInvalid(nombre, nb); if (nb) ok = false;
+    const eb = !emailRe.test(email.value.trim()); setInvalid(email, eb); if (eb) ok = false;
+    const ib = !interes.value; setInvalid(interes, ib); if (ib) ok = false;
+    if (!consent.checked){ ok = false; consent.closest(".consent").style.color = "#ff9a7a"; }
+    else { consent.closest(".consent").style.color = ""; }
+    return ok;
+  }
+
+  form.addEventListener("submit", async function (e){
+    e.preventDefault();
+    if (!validate()) return;
+
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+
+    // registrar el evento en GA (si está configurado)
+    if (typeof gtag === "function"){
+      gtag("event", "form_submit", { form_name: "contacto", interes: form.interes.value });
+    }
+
+    const data = new URLSearchParams(new FormData(form));
+    try {
+      if (FORM_ENDPOINT.indexOf("PEGAR_") === -1){
+        await fetch(FORM_ENDPOINT, { method: "POST", mode: "no-cors", body: data });
+      }
+    } catch (err) { /* con no-cors no podemos leer la respuesta; seguimos igual */ }
+
+    window.location.href = "gracias.html";
+  });
+</script>
 </body>
 </html>

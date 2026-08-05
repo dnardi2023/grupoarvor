@@ -1,65 +1,94 @@
-/* ===== Grupo Arvor — comportamientos compartidos ===== */
-(function () {
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo comprar un auto usado con confianza — Blog Grupo Arvor</title>
+<meta name="description" content="Guía rápida para elegir un usado con seguridad: qué revisar, qué papeles pedir y por qué la trazabilidad importa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="arvor.css">
+<script src="analytics.js"></script>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
 
-  // year
-  var yr = document.getElementById("yr");
-  if (yr) yr.textContent = new Date().getFullYear();
+<nav id="nav">
+  <a class="logo-link" href="index.html" aria-label="Grupo Arvor — inicio"><img class="logo-mark" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+  <div class="nav-links">
+    <a href="index.html#grupo">Sobre nosotros</a>
+    <a href="index.html#empresas">Ecosistema</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="index.html#sumate" class="nav-cta">Sumate</a>
+  </div>
+</nav>
 
-  // nav background on scroll
-  var nav = document.getElementById("nav");
-  if (nav) {
-    var onScroll = function () { nav.classList.toggle("scrolled", window.scrollY > 40); };
-    onScroll(); addEventListener("scroll", onScroll, { passive: true });
-  }
+<header class="article-hero">
+  <div class="cover" style="background:linear-gradient(135deg,#0c2433,#f26a1b)" aria-hidden="true"></div>
+  <div class="wrap">
+    <a class="back" href="blog.html">← Volver al blog</a>
+    <div class="tagcat">Movilidad</div>
+    <h1>Cómo comprar un auto usado con confianza: guía rápida</h1>
+    <div class="meta"><span>Equipo Grupo Arvor</span><span class="dot"></span><span>22 jul 2026</span><span class="dot"></span><span>5 min de lectura</span></div>
+  </div>
+</header>
 
-  // scroll progress
-  var bar = document.getElementById("progress");
-  if (bar) {
-    var prog = function () {
-      var h = document.documentElement;
-      var max = h.scrollHeight - h.clientHeight;
-      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
-    };
-    prog(); addEventListener("scroll", prog, { passive: true }); addEventListener("resize", prog, { passive: true });
-  }
+<article class="article">
+  <p class="lead">Comprar un usado no tiene por qué ser una apuesta. Con algunos chequeos y las preguntas correctas, podés elegir con tranquilidad y evitar sorpresas.</p>
 
-  // reveal on scroll
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
-  }, { threshold: .14, rootMargin: "0px 0px -8% 0px" });
-  document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  <p>El mercado de usados es una gran puerta de entrada a la movilidad: más opciones, distintos presupuestos y modelos para cada necesidad. La clave está en sumar confianza a la decisión. Va una guía práctica.</p>
 
-  // card tilt (post cards)
-  if (!reduce) {
-    document.querySelectorAll(".post-card, .featured").forEach(function (card) {
-      var raf = null;
-      card.addEventListener("pointermove", function (e) {
-        var r = card.getBoundingClientRect();
-        var px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-        if (raf) return;
-        raf = requestAnimationFrame(function () {
-          card.style.transform = "translateY(-6px) perspective(900px) rotateX(" + ((0.5 - py) * 4) + "deg) rotateY(" + ((px - 0.5) * 5) + "deg)";
-          raf = null;
-        });
-      });
-      card.addEventListener("pointerleave", function () { card.style.transform = ""; });
-    });
-  }
+  <h2>1. Revisá el estado real del vehículo</h2>
+  <ul>
+    <li><strong>Carrocería y chasis:</strong> buscá diferencias de pintura, ajustes disparejos o signos de reparaciones importantes.</li>
+    <li><strong>Motor y fluidos:</strong> niveles, pérdidas, ruidos al arrancar en frío.</li>
+    <li><strong>Neumáticos y frenos:</strong> el desgaste cuenta la historia de uso del auto.</li>
+    <li><strong>Electrónica:</strong> probá luces, tablero, aire, vidrios y multimedia.</li>
+  </ul>
 
-  // category filter (blog)
-  var cats = document.querySelectorAll(".cat");
-  if (cats.length) {
-    cats.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        cats.forEach(function (c) { c.classList.remove("active"); });
-        btn.classList.add("active");
-        var f = btn.getAttribute("data-cat");
-        document.querySelectorAll(".post-card").forEach(function (card) {
-          var show = (f === "all" || card.getAttribute("data-cat") === f);
-          card.style.display = show ? "" : "none";
-        });
-      });
-    });
-  }
-})();
+  <h2>2. Pedí la documentación completa</h2>
+  <p>Título, cédula, verificación policial, informe de dominio y comprobantes de service. Un vehículo con historial claro es un vehículo confiable. Si algo no cierra en los papeles, mejor frenar.</p>
+
+  <blockquote>La trazabilidad es todo: saber de dónde viene el auto vale tanto como su estado mecánico.</blockquote>
+
+  <h2>3. Probá el auto antes de decidir</h2>
+  <p>Una prueba de manejo dice mucho: cómo responde el motor, la caja, la dirección y los frenos. Prestá atención a ruidos, vibraciones y a cómo se comporta a distintas velocidades.</p>
+
+  <h2>4. Comprá en un lugar que responda</h2>
+  <p>La diferencia entre una compra particular y una concesionaria está en el respaldo: control previo del vehículo, transferencia en regla, garantía y posventa. Comprar donde hay una estructura detrás te cubre después de la compra, no solo durante.</p>
+  <p>En Grupo Arvor, <strong>Autonet</strong> reúne el parque automotor multimarca más grande de la Patagonia, con 0&nbsp;km y usados y atención integral. Y si necesitás financiar, <strong>Credinet</strong> acompaña con crédito automotor pensado para cada perfil.</p>
+
+  <h2>En resumen</h2>
+  <p>Revisá el estado, exigí los papeles, probalo y elegí un lugar que te respalde. Con esos cuatro pasos, tu próximo usado deja de ser una incógnita y se vuelve una buena decisión.</p>
+</article>
+
+<div class="article-cta reveal">
+  <h3>¿Buscás tu próximo auto?</h3>
+  <p>Conocé las opciones del grupo y financiá tu compra con respaldo.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-primary" href="https://autonet.com.ar/" target="_blank" rel="noopener">Ver usados en Autonet</a>
+    <a class="btn btn-ghost" href="contacto.html">Consultanos</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a class="logo-link" href="index.html"><img class="logo-mark" style="height:30px" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+      <div class="foot-links">
+        <a href="index.html#grupo">Sobre nosotros</a>
+        <a href="index.html#empresas">Ecosistema</a>
+        <a href="blog.html">Blog</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="https://www.linkedin.com/company/grupo-arvor/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="foot-base">© <span id="yr"></span> Grupo Arvor · De la Patagonia, hacia el futuro.</div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

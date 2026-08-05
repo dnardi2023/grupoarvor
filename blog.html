@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Grupo Arvor</title>
+<meta name="description" content="Novedades, movilidad, energía, finanzas y cultura desde Grupo Arvor. De la Patagonia, hacia el futuro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="arvor.css">
+<script src="analytics.js"></script>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<nav id="nav">
+  <a class="logo-link" href="index.html" aria-label="Grupo Arvor — inicio"><img class="logo-mark" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+  <div class="nav-links">
+    <a href="index.html#grupo">Sobre nosotros</a>
+    <a href="index.html#empresas">Ecosistema</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="index.html#sumate" class="nav-cta">Sumate</a>
+  </div>
+</nav>
+
+<header class="page-hero aurora-bg">
+  <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+  <div class="wrap">
+    <span class="eyebrow">Blog de Grupo Arvor</span>
+    <h1>Ideas que <span class="grad">mueven</span> la Patagonia</h1>
+    <p class="sub">Novedades del grupo, movilidad, energía, finanzas y cultura. Historias y contenido útil para clientes, colaboradores y quienes quieren crecer con nosotros.</p>
+
+    <div class="cat-filter" role="tablist" aria-label="Categorías">
+      <button class="cat active" data-cat="all">Todas</button>
+      <button class="cat" data-cat="movilidad">Movilidad</button>
+      <button class="cat" data-cat="energia">Energía</button>
+      <button class="cat" data-cat="finanzas">Finanzas</button>
+      <button class="cat" data-cat="cultura">Cultura</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-bottom:90px">
+
+  <!-- FEATURED -->
+  <a class="featured reveal" href="vaca-muerta-talento.html">
+    <div class="cover" style="background:linear-gradient(135deg,#0b2a3a,#1f6fb8)"></div>
+    <div class="body">
+      <span class="tagcat">Energía</span>
+      <h2>Vaca Muerta y la nueva demanda de talento técnico en la Patagonia</h2>
+      <p>Cómo el crecimiento del Oil&nbsp;&amp;&nbsp;Gas está redefiniendo los perfiles que la región necesita, y qué rol juega un grupo con infraestructura propia.</p>
+      <div class="meta">Equipo Grupo Arvor · 28 jul 2026 · 6 min de lectura</div>
+    </div>
+  </a>
+
+  <!-- GRID -->
+  <div class="post-grid">
+
+    <a class="post-card reveal" data-cat="movilidad" data-d="1" href="comprar-usado-con-confianza.html">
+      <div class="cover" style="background:linear-gradient(135deg,#0c2433,#f26a1b)"></div>
+      <div class="pc-body">
+        <span class="tagcat">Movilidad</span>
+        <h3>Cómo comprar un auto usado con confianza</h3>
+        <p>Una guía rápida para elegir bien: qué revisar, qué papeles pedir y por qué la trazabilidad importa.</p>
+        <div class="meta">22 jul 2026 · 5 min</div>
+        <span class="arrow">Leer nota →</span>
+      </div>
+    </a>
+
+    <a class="post-card reveal" data-cat="finanzas" data-d="2" href="planes-de-ahorro-como-funcionan.html">
+      <div class="cover" style="background:linear-gradient(135deg,#0a2230,#15a9c9)"></div>
+      <div class="pc-body">
+        <span class="tagcat">Finanzas</span>
+        <h3>Planes de ahorro para tu 0km: cómo funcionan</h3>
+        <p>Cuotas, adjudicaciones y cuándo conviene. Todo lo que tenés que saber antes de suscribir.</p>
+        <div class="meta">15 jul 2026 · 6 min</div>
+        <span class="arrow">Leer nota →</span>
+      </div>
+    </a>
+
+    <a class="post-card reveal" data-cat="cultura" data-d="3" href="crecer-en-arvor.html">
+      <div class="cover" style="background:linear-gradient(135deg,#241a12,#f26a1b)"></div>
+      <div class="pc-body">
+        <span class="tagcat">Cultura</span>
+        <h3>Crecer en un grupo de muchas empresas</h3>
+        <p>Qué significa trabajar en Arvor y por qué el desarrollo no se agota en un solo puesto.</p>
+        <div class="meta">8 jul 2026 · 4 min</div>
+        <span class="arrow">Leer nota →</span>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a class="logo-link" href="index.html"><img class="logo-mark" style="height:30px" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+      <div class="foot-links">
+        <a href="index.html#grupo">Sobre nosotros</a>
+        <a href="index.html#empresas">Ecosistema</a>
+        <a href="blog.html">Blog</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="https://www.linkedin.com/company/grupo-arvor/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="foot-base">© <span id="yr"></span> Grupo Arvor · De la Patagonia, hacia el futuro.</div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
