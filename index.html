@@ -6,7 +6,7 @@
 <title>Grupo Arvor — De la Patagonia, hacia el futuro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Michroma&display=swap" rel="stylesheet">
 <script src="analytics.js"></script>
   <style>
   :root{
@@ -193,6 +193,65 @@
     background:linear-gradient(96deg,var(--teal),var(--ember));-webkit-background-clip:text;background-clip:text;color:transparent}
   .stat .l{font-size:.9rem;color:var(--mist);margin-top:8px;line-height:1.4}
 
+
+  /* ===== NUESTRO PROPÓSITO ===== */
+  .purpose{
+    position:relative;overflow:hidden;margin:clamp(52px,6.4vw,92px) calc(50% - 50vw) 0;width:100vw;
+    background:var(--ink);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:clamp(18px,2.1vw,32px) 0;
+  }
+  .purpose::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(55% 120% at 0% 50%,rgba(242,106,27,.12),transparent 62%)}
+  .purpose>*{position:relative}
+  .pinner{position:relative;max-width:var(--maxw);margin:0 auto;padding:0 28px;
+    display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,3.6vw,60px);align-items:center}
+  .pmap{width:clamp(74px,7.4vw,112px);flex:none}
+  .pmap svg{width:100%;height:auto;overflow:visible;display:block}
+  /* el contorno se dibuja, se rellena, descansa y vuelve a empezar */
+  .pmap .landfill{fill:var(--orange);opacity:0}
+  .pmap .landline{fill:none;stroke:var(--orange);stroke-width:2.4;stroke-linejoin:round;
+    stroke-dasharray:1080;stroke-dashoffset:1080;opacity:0}
+  .pmap .isle{fill:var(--orange);stroke:var(--orange);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round;opacity:0}
+  .pmap .halo,.pmap .pin{opacity:0}
+  .purpose.in .pmap .landline{animation:mapline 14s cubic-bezier(.4,.1,.3,1) infinite}
+  .purpose.in .pmap .landfill{animation:mapfill 14s ease infinite}
+  .purpose.in .pmap .isle{animation:mapisle 14s ease infinite}
+  .purpose.in .pmap .pin{animation:pbeat 2.4s ease-in-out infinite, mapdot 14s ease infinite}
+  .purpose.in .pmap .halo{animation:phalo 2.8s ease-out infinite, mapdot 14s ease infinite}
+  @keyframes mapline{
+    0%{stroke-dashoffset:1080;opacity:.95}
+    42%{stroke-dashoffset:0;opacity:.95}
+    56%{stroke-dashoffset:0;opacity:.22}
+    84%{stroke-dashoffset:0;opacity:.22}
+    93%{stroke-dashoffset:0;opacity:0}
+    94%{stroke-dashoffset:1080;opacity:0}
+    100%{stroke-dashoffset:1080;opacity:.95}
+  }
+  @keyframes mapfill{0%,40%{opacity:0}56%{opacity:1}84%{opacity:1}93%,100%{opacity:0}}
+  @keyframes mapdot{0%,56%{opacity:0}64%{opacity:1}84%{opacity:1}91%,100%{opacity:0}}
+  @keyframes mapisle{0%,44%{opacity:0}58%{opacity:1}84%{opacity:1}92%,100%{opacity:0}}
+  .pmap .halo{fill:#fff;opacity:.3;animation:phalo 2.8s ease-out infinite}
+  .pmap .pin{fill:#fff;transform-box:fill-box;transform-origin:center;animation:pbeat 2.4s ease-in-out infinite}
+  .pmap .lbl{fill:var(--cloud);font-family:"Sora",sans-serif;font-size:15px;font-weight:600;letter-spacing:2px}
+  .pmap .lead{stroke:var(--cloud);stroke-width:1.6;opacity:.7}
+  @keyframes phalo{0%{r:5;opacity:.45}70%{r:22;opacity:0}100%{r:5;opacity:0}}
+  @keyframes pbeat{0%,100%{transform:scale(.78)}50%{transform:scale(1.25)}}
+  .purpose .ptitle{
+    font-family:"Michroma",sans-serif;font-weight:400;text-transform:uppercase;
+    font-size:clamp(1.05rem,2.1vw,1.9rem);line-height:1.2;letter-spacing:.02em;color:var(--cloud);
+  }
+  .purpose .ptitle span{color:var(--ember)}
+  .purpose p{
+    margin-top:clamp(16px,1.8vw,26px);color:var(--mist-2);
+    font-family:"Michroma",sans-serif;
+    font-size:clamp(.74rem,.86vw,.86rem);line-height:2.05;letter-spacing:.005em;max-width:58ch;
+  }
+  @media(max-width:720px){
+    .pinner{grid-template-columns:1fr;gap:20px;justify-items:start;padding:0 22px}
+    .pmap{width:70px}
+    .purpose .ptitle{font-size:1.05rem}
+  }
+
   /* ===== SECTORES ===== */
   .sectors{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
   @media(max-width:860px){.sectors{grid-template-columns:1fr 1fr}}
@@ -210,7 +269,7 @@
 
   /* ===== EMPRESAS ===== */
   #empresas{background:var(--ink)}
-  .companies{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+  .companies{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;align-items:stretch}
   @media(max-width:900px){.companies{grid-template-columns:1fr 1fr}}
   @media(max-width:600px){.companies{grid-template-columns:1fr}}
   .company{
@@ -218,7 +277,7 @@
     display:flex;flex-direction:column;
     background:linear-gradient(180deg,var(--panel),var(--night-2));
     border:1px solid var(--line);border-radius:var(--r);
-    padding:30px 28px;transition:.3s;position:relative;overflow:hidden;min-height:230px;
+    padding:30px 28px;transition:.3s;position:relative;overflow:hidden;min-height:230px;height:100%;
   }
   .company::after{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1px;
     background:linear-gradient(135deg,var(--accent),transparent 55%);
@@ -230,13 +289,13 @@
     align-self:flex-start;font-family:"Sora",sans-serif;font-size:11px;font-weight:600;
     letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
     border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);
-    padding:5px 11px;border-radius:999px;margin-bottom:auto;
+    padding:5px 11px;border-radius:999px;
   }
   .company h3{font-size:1.5rem;font-weight:800;margin:22px 0 0;letter-spacing:-.02em}
   .company .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:10px;vertical-align:middle}
   .company .role{color:var(--mist);font-size:.96rem;margin-top:10px}
   .company .visit{
-    margin-top:22px;font-family:"Sora",sans-serif;font-size:14px;font-weight:600;
+    margin-top:auto;padding-top:22px;font-family:"Sora",sans-serif;font-size:14px;font-weight:600;
     color:var(--cloud);display:inline-flex;align-items:center;gap:8px;transition:gap .25s,color .25s;
   }
   .company .visit svg{transition:transform .25s}
@@ -356,9 +415,12 @@
   .reveal.in{opacity:1;transform:none;filter:none}
 
   /* card grid gets 3D depth */
-  .companies{perspective:1200px}
-  .company{transform-style:preserve-3d;will-change:transform;
-    transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease,border-color .35s ease}
+  .companies{perspective:none}
+  .company{will-change:transform;
+    transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease,border-color .35s ease}
+  .company.reveal{transform:translateY(46px) scale(.97);filter:blur(8px);
+    transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1),filter .85s ease}
+  .company.reveal.in{transform:none;filter:none}
   .company:hover{box-shadow:0 34px 66px -32px rgba(0,0,0,.8)}
   /* cursor-following spotlight inside each card */
   .company::before{content:"";position:absolute;inset:0;border-radius:var(--r);z-index:0;pointer-events:none;
@@ -482,7 +544,8 @@
   #sumate .wm span{font-family:"Sora";font-weight:800;font-size:36vw;line-height:1;color:rgba(255,255,255,.10);transform:rotate(-11deg);white-space:nowrap;letter-spacing:-.05em}
   #sumate .eyebrow{color:rgba(255,255,255,.9)}
   #sumate .eyebrow::before{background:rgba(255,255,255,.5)}
-  #sumate h2 .grad{background:none;-webkit-text-fill-color:currentColor;color:#2a1205}
+  #sumate h2{color:rgba(255,241,237,.82)}
+  #sumate h2 .grad{background:none;-webkit-text-fill-color:#fff;color:#fff}
   #sumate .desc{color:rgba(255,241,237,.92)}
   #sumate .btn-primary{background:var(--ink);color:var(--cloud);box-shadow:0 14px 40px -14px rgba(0,0,0,.6)}
   #sumate .btn-ghost{border-color:rgba(255,255,255,.55);color:#fff;background:rgba(255,255,255,.06)}
@@ -556,6 +619,27 @@
         <div class="stat"><div class="n">+9</div><div class="l">unidades de negocio bajo una misma identidad</div></div>
         <div class="stat"><div class="n">NQN&nbsp;·&nbsp;RN</div><div class="l">capacidad operativa en Neuquén y Río Negro</div></div>
       </div>
+    </div>
+
+
+    <div class="purpose reveal" data-d="1">
+      <div class="pinner">
+      <div class="pmap" aria-hidden="true">
+        <svg viewBox="-6 0 212 412">
+          <path class="landfill" d="M72.0 11.5 L107.0 11.5 L139.0 34.5 L159.0 50.6 L198.0 52.9 L196.0 74.8 L179.0 92.0 L156.0 113.8 L151.0 148.3 L163.0 174.8 L168.0 197.8 L135.0 205.8 L112.0 205.8 L114.0 228.8 L86.0 227.7 L85.0 251.8 L94.0 246.1 L82.0 276.0 L59.0 287.5 L61.0 325.4 L50.0 359.9 L49.0 389.8 L71.0 391.0 L62.0 378.3 L35.0 363.4 L16.0 356.5 L9.0 316.2 L18.0 276.0 L21.0 230.0 L31.0 184.0 L37.0 149.5 L51.0 115.0 L39.0 80.5 L51.0 40.2 L65.0 21.8 Z"/>
+          <path class="landline" d="M72.0 11.5 L107.0 11.5 L139.0 34.5 L159.0 50.6 L198.0 52.9 L196.0 74.8 L179.0 92.0 L156.0 113.8 L151.0 148.3 L163.0 174.8 L168.0 197.8 L135.0 205.8 L112.0 205.8 L114.0 228.8 L86.0 227.7 L85.0 251.8 L94.0 246.1 L82.0 276.0 L59.0 287.5 L61.0 325.4 L50.0 359.9 L49.0 389.8 L71.0 391.0 L62.0 378.3 L35.0 363.4 L16.0 356.5 L9.0 316.2 L18.0 276.0 L21.0 230.0 L31.0 184.0 L37.0 149.5 L51.0 115.0 L39.0 80.5 L51.0 40.2 L65.0 21.8 Z"/>
+          <path class="isle" d="M121.5 350.2 L129.5 347.3 L135.5 349.0 L134.0 352.5 L129.5 351.9 L132.0 355.9 L125.5 355.9 L122.5 353.1 Z"/>
+          <path class="isle" d="M140.5 347.9 L150.5 347.3 L157.5 351.3 L152.0 353.6 L147.5 352.5 L151.5 358.2 L145.5 359.9 L143.5 355.3 L139.5 351.9 Z"/>
+          <circle class="halo" cx="54.4" cy="206.4" r="6"/>
+          <circle class="pin" cx="54.4" cy="206.4" r="4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="ptitle">Nuestro <span>propósito</span></div>
+        <p>Impulsamos el movimiento que transforma vidas, negocios y territorios, integrando soluciones de movilidad, energía y servicios que hacen crecer a las personas, fortalecen a las organizaciones y desarrollan la Patagonia.</p>
+      </div>
+      </div>
+    </div>
     </div>
 
     <div class="reveal" data-d="1" style="margin-top:96px"><span class="eyebrow">Lo que hacemos</span></div>
@@ -840,6 +924,20 @@
   }, {threshold:.14, rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
+  // aparición en cascada de las tarjetas de empresas (se dispara toda la grilla junta)
+  document.querySelectorAll('.companies').forEach(grid => {
+    const cards = [...grid.querySelectorAll('.company')];
+    cards.forEach((card, i) => {
+      card.removeAttribute('data-d');
+      card.style.transitionDelay = (i * 0.15) + 's';
+      io.unobserve(card);                       // que no lo dispare el observador individual
+    });
+    const gridIO = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { cards.forEach(c => c.classList.add('in')); gridIO.unobserve(e.target); }
+    }), {threshold:.05, rootMargin:'0px 0px -10% 0px'});
+    gridIO.observe(grid);
+  });
+
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // scroll progress bar
@@ -853,24 +951,13 @@
   addEventListener('resize', setProgress, {passive:true});
 
   if (!reduce) {
-    // card 3D tilt + cursor spotlight
+    // spotlight que sigue al cursor (sin inclinar la tarjeta)
     document.querySelectorAll('.company').forEach(card => {
-      let raf = null;
       card.addEventListener('pointermove', e => {
         const r = card.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        card.style.setProperty('--mx', (px * 100) + '%');
-        card.style.setProperty('--my', (py * 100) + '%');
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          const rx = (0.5 - py) * 7;
-          const ry = (px - 0.5) * 9;
-          card.style.transform = `translateY(-6px) rotateX(${rx}deg) rotateY(${ry}deg)`;
-          raf = null;
-        });
+        card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
       });
-      card.addEventListener('pointerleave', () => { card.style.transform = ''; });
     });
 
     // hero mouse parallax
