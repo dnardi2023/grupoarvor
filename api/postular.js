@@ -259,6 +259,3 @@ export default async function handler(req) {
 
   return responder({ ok: true, candidato_id: candidatoId, vinculo: vinculo }, 200, origin);
 }
-
-  return responder({ ok: true }, 200, origin);
-}
