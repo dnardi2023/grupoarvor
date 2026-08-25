@@ -85,7 +85,10 @@ export default async function handler(req) {
 
   const KEY = process.env.PEOPLEFORCE_COMPANY_KEY;
   if (!KEY) {
-    return responder({ ok: false, error: 'config' }, 500, origin);
+    return responder({
+      ok: false, error: 'config',
+      detalle: 'Falta la variable PEOPLEFORCE_COMPANY_KEY en Vercel, o no se redesplegó después de cargarla.'
+    }, 500, origin);
   }
 
   let entrada;
@@ -156,11 +159,20 @@ export default async function handler(req) {
     // y actualizó el existente. No es un error para la persona.
     if (!r.ok && r.status !== 422) {
       console.error('PF candidates', r.status, JSON.stringify(data));
-      return responder({ ok: false, error: 'peopleforce' }, 502, origin);
+      var pista = 'PeopleForce respondió ' + r.status + '. ';
+      if (r.status === 401) pista += 'La Company API key es inválida o está desactivada.';
+      else if (r.status === 403) pista += 'La clave no tiene permisos, o el plan no habilita la API (requiere Professional).';
+      else if (r.status === 404) pista += 'La ruta del endpoint no existe.';
+      else if (r.status === 429) pista += 'Demasiadas llamadas seguidas, esperá un minuto.';
+      else pista += 'Detalle: ' + JSON.stringify(data).slice(0, 300);
+      return responder({ ok: false, error: 'peopleforce', status: r.status, detalle: pista }, 502, origin);
     }
   } catch (e) {
     console.error('PF candidates fetch', e);
-    return responder({ ok: false, error: 'peopleforce' }, 502, origin);
+    return responder({
+      ok: false, error: 'peopleforce',
+      detalle: 'No se pudo contactar a PeopleForce: ' + String(e && e.message || e).slice(0, 300)
+    }, 502, origin);
   }
 
   // ── 2 · Vincular el candidato a la vacante ───────────────────────
