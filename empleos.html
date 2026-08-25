@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empleos — Grupo Arvor</title>
+<meta name="description" content="Búsquedas abiertas en Grupo Arvor: automotriz, energía, servicios financieros y logística en la Patagonia. Postulate en dos minutos.">
+<meta property="og:title" content="Trabajá en Grupo Arvor">
+<meta property="og:description" content="Un ecosistema, infinitas oportunidades. Mirá nuestras búsquedas abiertas y postulate.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="arvor.css">
+<script src="analytics.js"></script>
+<style>
+
+/* ===== OPORTUNIDADES ===== */
+#oportunidades{background:transparent;padding:0 0 40px}
+.section-head{max-width:680px}
+.section-head h2{font-size:clamp(1.8rem,4.4vw,2.8rem);font-weight:800;margin-top:18px}
+#oportunidades .op-sub{color:var(--mist);margin-top:22px;font-size:1.1rem;max-width:58ch}
+
+/* filtros */
+#oportunidades .jbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:0}
+#oportunidades .jbar input,
+#oportunidades .jbar select{
+  font-family:"Inter",sans-serif;font-size:.98rem;color:var(--cloud);
+  background:var(--night);border:1px solid var(--line);border-radius:999px;
+  padding:13px 20px;min-width:210px;transition:border-color .25s;
+}
+#oportunidades .jbar select{
+  -webkit-appearance:none;appearance:none;cursor:pointer;padding-right:44px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239fb4c2' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;background-position:right 18px center;
+}
+#oportunidades .jbar input::placeholder{color:var(--mist)}
+#oportunidades .jbar input:hover,#oportunidades .jbar select:hover,
+#oportunidades .jbar input:focus,#oportunidades .jbar select:focus{outline:none;border-color:var(--orange)}
+#oportunidades .jbar select option{background:var(--night);color:var(--cloud)}
+#oportunidades .jcount{margin-left:auto;font-family:"Sora",sans-serif;font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--mist)}
+
+/* tarjetas */
+#oportunidades .jlist{margin-top:26px}
+#oportunidades .jcard{
+  position:relative;overflow:hidden;width:100%;text-align:left;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:26px;
+  border:1px solid var(--line);border-radius:var(--r);padding:26px 28px;margin-bottom:14px;
+  background:linear-gradient(180deg,var(--panel),var(--night-2));color:var(--cloud);
+  font-family:inherit;
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s;
+}
+#oportunidades .jcard::before{content:"";position:absolute;left:0;top:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--teal),var(--orange));transition:width .45s ease}
+#oportunidades .jcard:hover{transform:translateY(-5px);border-color:rgba(159,180,194,.32);box-shadow:0 30px 60px -34px rgba(0,0,0,.8)}
+#oportunidades .jcard:hover::before{width:100%}
+#oportunidades .jcard>*{position:relative;z-index:1}
+#oportunidades .jcard h3{font-family:"Sora",sans-serif;font-size:1.35rem;font-weight:700;letter-spacing:-.02em;margin:0 0 14px}
+#oportunidades .jtags{display:flex;flex-wrap:wrap;gap:9px}
+#oportunidades .jtag{
+  font-family:"Sora",sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;
+  color:var(--mist-2);border:1px solid var(--line);border-radius:999px;
+  padding:6px 13px;background:rgba(255,255,255,.02);
+}
+#oportunidades .jtag.area{color:var(--ember);border-color:rgba(242,106,27,.4)}
+#oportunidades .jgo{
+  font-family:"Sora",sans-serif;font-size:14px;font-weight:600;white-space:nowrap;
+  color:var(--cloud);border:1px solid var(--line);border-radius:999px;padding:13px 24px;
+  display:inline-flex;align-items:center;gap:9px;transition:.25s;background:rgba(255,255,255,.03);
+}
+#oportunidades .jcard:hover .jgo{border-color:var(--orange);background:rgba(242,106,27,.12)}
+#oportunidades .jgo svg{transition:transform .25s}
+#oportunidades .jcard:hover .jgo svg{transform:translateX(3px)}
+@media(max-width:760px){
+  #oportunidades .jcard{flex-direction:column;align-items:flex-start;gap:20px}
+  #oportunidades .jgo{width:100%;justify-content:center}
+  #oportunidades .jbar input,#oportunidades .jbar select{width:100%;min-width:0}
+  #oportunidades .jcount{margin-left:0}
+}
+
+/* skeleton + estados */
+#oportunidades .jskel{height:104px;border-radius:var(--r);border:1px solid var(--line);margin-bottom:14px;
+  background:linear-gradient(100deg,rgba(255,255,255,.02) 30%,rgba(255,255,255,.07) 50%,rgba(255,255,255,.02) 70%);
+  background-size:220% 100%;animation:jshine 1.5s linear infinite}
+@keyframes jshine{to{background-position:-120% 0}}
+#oportunidades .jstate{
+  border:1px solid var(--line);border-radius:var(--r);padding:52px 34px;text-align:center;
+  background:linear-gradient(120deg,rgba(21,169,201,.12),rgba(31,111,184,.08) 50%,rgba(242,106,27,.14));
+}
+#oportunidades .jstate h3{font-family:"Sora",sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:0}
+#oportunidades .jstate p{color:var(--mist-2);max-width:52ch;margin:16px auto 26px;font-size:1.05rem}
+#oportunidades .jstate .btn{border:0;cursor:pointer}
+
+/* proceso */
+#oportunidades .proc-head{margin-top:110px}
+#oportunidades .procesos{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:48px}
+@media(max-width:1000px){#oportunidades .procesos{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){#oportunidades .procesos{grid-template-columns:1fr}}
+#oportunidades .paso{
+  position:relative;overflow:hidden;border:1px solid var(--line);border-radius:var(--r);
+  padding:28px 24px;background:rgba(255,255,255,.015);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,background .35s;
+}
+#oportunidades .paso::before{content:"";position:absolute;left:0;top:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--teal),var(--orange));transition:width .45s ease}
+#oportunidades .paso:hover{transform:translateY(-5px);border-color:rgba(159,180,194,.32);background:rgba(12,27,41,.65)}
+#oportunidades .paso:hover::before{width:100%}
+#oportunidades .paso .num{font-family:"Sora",sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;color:var(--orange)}
+#oportunidades .paso h4{font-family:"Sora",sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:-.01em;margin:14px 0 10px}
+#oportunidades .paso p{font-size:.94rem;color:var(--mist);margin:0}
+
+/* ===== FICHA + POSTULACIÓN (panel) ===== */
+#arvPanel{position:fixed;inset:0;z-index:300;display:none}
+#arvPanel.open{display:block}
+#arvPanel .backdrop{position:absolute;inset:0;background:rgba(4,10,16,.78);backdrop-filter:blur(6px);animation:apfade .3s ease}
+@keyframes apfade{from{opacity:0}to{opacity:1}}
+#arvPanel .sheet{
+  position:absolute;top:0;right:0;bottom:0;width:min(760px,100%);
+  background:linear-gradient(180deg,var(--night-2),var(--night));
+  border-left:1px solid var(--line);overflow-y:auto;
+  animation:apslide .42s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes apslide{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}
+#arvPanel .sheet-in{padding:clamp(28px,4vw,52px)}
+#arvPanel .close{
+  position:sticky;top:0;float:right;margin:-8px -8px 0 0;z-index:2;
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(8,19,30,.9);color:var(--cloud);cursor:pointer;
+  display:grid;place-items:center;transition:.25s;
+}
+#arvPanel .close:hover{border-color:var(--orange);background:rgba(242,106,27,.14)}
+#arvPanel h3{font-family:"Sora",sans-serif;font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;letter-spacing:-.03em;margin:0 0 16px;max-width:22ch}
+#arvPanel .desc{color:var(--mist-2);line-height:1.75;margin-top:30px;font-size:1.02rem}
+#arvPanel .desc h1,#arvPanel .desc h2,#arvPanel .desc h3,#arvPanel .desc h4{
+  font-family:"Sora",sans-serif;font-size:1.1rem;font-weight:700;color:var(--cloud);margin:26px 0 10px}
+#arvPanel .desc ul,#arvPanel .desc ol{padding-left:22px;margin:12px 0}
+#arvPanel .desc li{margin:7px 0}
+#arvPanel .desc p{margin:12px 0}
+#arvPanel .desc a{color:var(--ember);text-decoration:underline}
+#arvPanel .sep{height:1px;background:var(--line);margin:38px 0}
+
+#arvPanel form .fld{margin-bottom:18px}
+#arvPanel form label.lb{display:block;font-family:"Inter",sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);margin-bottom:10px}
+#arvPanel form input[type=text],
+#arvPanel form input[type=email],
+#arvPanel form input[type=tel],
+#arvPanel form input[type=url],
+#arvPanel form textarea{
+  width:100%;background:var(--night);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;color:var(--cloud);font-family:"Inter",sans-serif;font-size:.98rem;transition:border-color .25s;
+}
+#arvPanel form textarea{min-height:110px;resize:vertical}
+#arvPanel form input:focus,#arvPanel form textarea:focus{outline:none;border-color:var(--orange)}
+#arvPanel form .fld.bad input,#arvPanel form .fld.bad .drop{border-color:#e0603a}
+#arvPanel form .err{display:none;margin-top:8px;font-size:12.5px;color:#e0603a}
+#arvPanel form .fld.bad .err{display:block}
+#arvPanel .drop{
+  border:1px dashed var(--line);border-radius:12px;padding:22px 18px;text-align:center;
+  cursor:pointer;transition:.25s;background:rgba(255,255,255,.015);
+}
+#arvPanel .drop:hover{border-color:var(--orange);background:rgba(242,106,27,.07)}
+#arvPanel .drop b{font-family:"Sora",sans-serif;font-weight:600;font-size:.96rem;color:var(--cloud);display:block}
+#arvPanel .drop span{font-size:.85rem;color:var(--mist);display:block;margin-top:6px}
+#arvPanel .drop input[type=file]{display:none}
+#arvPanel .consent{display:flex;align-items:flex-start;gap:12px;margin:0 0 16px;font-size:.92rem;line-height:1.5;color:var(--mist-2);cursor:pointer}
+#arvPanel .consent input[type=checkbox]{
+  width:22px;height:22px;flex:none;margin:2px 0 0;cursor:pointer;-webkit-appearance:none;appearance:none;
+  background:var(--night);border:1px solid var(--line);border-radius:5px;transition:.2s;
+}
+#arvPanel .consent input[type=checkbox]:hover{border-color:var(--orange)}
+#arvPanel .consent input[type=checkbox]:checked{
+  background:var(--orange) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a0c02' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>") center/15px no-repeat;
+  border-color:var(--orange);
+}
+#arvPanel .consent.bad input[type=checkbox]{border-color:#e0603a}
+#arvPanel .send{width:100%;border:0;cursor:pointer;justify-content:center;font-family:"Sora";font-weight:700;margin-top:8px}
+#arvPanel .send[disabled]{opacity:.6;cursor:default}
+#arvPanel .formerr{display:none;margin-top:16px;padding:14px 16px;border-radius:12px;
+  border:1px solid rgba(224,96,58,.5);background:rgba(224,96,58,.1);color:#ffb9a3;font-size:.92rem}
+#arvPanel .formerr.on{display:block}
+#arvPanel .thanks{display:none;text-align:center;padding:40px 10px}
+#arvPanel.sent .thanks{display:block}
+#arvPanel.sent form .fld,#arvPanel.sent form .consent,#arvPanel.sent form .send,#arvPanel.sent form .formerr{display:none}
+#arvPanel .thanks h4{font-family:"Sora";font-weight:800;font-size:1.5rem;margin:0}
+#arvPanel .thanks p{color:var(--mist-2);margin:14px auto 0;max-width:44ch;line-height:1.6}
+@media(prefers-reduced-motion:reduce){#arvPanel .sheet,#arvPanel .backdrop{animation:none}}
+
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<nav id="nav">
+  <a class="logo-link" href="index.html" aria-label="Grupo Arvor — inicio"><img class="logo-mark" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+  <div class="nav-links">
+    <a href="index.html#grupo">Sobre nosotros</a>
+    <a href="index.html#empresas">Ecosistema</a>
+    <a href="blog.html">Blog</a>
+    <a href="index.html#contacto">Contacto</a>
+    <a href="empleos.html" class="nav-cta">Oportunidades</a>
+  </div>
+</nav>
+
+<header class="page-hero aurora-bg">
+  <div class="aurora" aria-hidden="true"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
+  <div class="wrap">
+    <span class="eyebrow">Trabajá en Grupo Arvor</span>
+    <h1>Un ecosistema, <span class="grad">infinitas oportunidades</span></h1>
+    <p class="sub">Somos un grupo patagónico que mueve la industria automotriz, la energía y los servicios financieros desde Neuquén. Entrás a una empresa y crecés en todo un grupo.</p>
+  </div>
+</header>
+
+<main class="wrap" style="padding-bottom:90px">
+  <section id="oportunidades">
+
+    <div class="section-head reveal" style="margin-bottom:38px">
+      <span class="eyebrow">Búsquedas abiertas</span>
+      <h2>Estas son las posiciones que estamos <span class="grad">buscando hoy</span></h2>
+      <p class="op-sub">Si está publicada acá, está abierta. Elegí la que te interese y postulate sin salir del sitio.</p>
+    </div>
+
+    <div class="jbar reveal" id="jbar" hidden>
+      <input type="search" id="jq" placeholder="Buscar por puesto…" aria-label="Buscar por puesto">
+      <select id="jloc" aria-label="Filtrar por localidad"><option value="">Todas las localidades</option></select>
+      <select id="jtype" aria-label="Filtrar por modalidad"><option value="">Todas las modalidades</option></select>
+      <span class="jcount" id="jcount"></span>
+    </div>
+
+    <div class="jlist reveal" id="jlist" aria-live="polite">
+      <div class="jskel"></div><div class="jskel"></div><div class="jskel"></div>
+    </div>
+
+    <div class="section-head proc-head reveal">
+      <span class="eyebrow">Cómo seleccionamos</span>
+      <h2>Un proceso <span class="grad">claro</span>, de principio a fin.</h2>
+      <p class="op-sub">Queremos que en cada etapa sepas dónde estás parado/a y qué sigue.</p>
+    </div>
+
+    <div class="procesos">
+      <div class="paso reveal" data-d="1"><div class="num">01</div><h4>Te postulás</h4>
+        <p>Elegís la búsqueda, cargás tu CV y recibís la confirmación de que tu postulación entró.</p></div>
+      <div class="paso reveal" data-d="2"><div class="num">02</div><h4>Revisamos tu perfil</h4>
+        <p>El equipo de Talento analiza tu experiencia para evaluar el match con el rol y con nuestra forma de trabajar.</p></div>
+      <div class="paso reveal" data-d="3"><div class="num">03</div><h4>Nos conocemos</h4>
+        <p>En caso de avanzar, tenés una primera entrevista con el equipo de Talento donde exploramos el rol, la organización y tus expectativas.</p></div>
+      <div class="paso reveal" data-d="4"><div class="num">04</div><h4>Entrevista con el área</h4>
+        <p>Te encontrás con quien va a ser tu líder. Se profundiza en lo técnico y en el día a día del rol.</p></div>
+      <div class="paso reveal" data-d="5"><div class="num">05</div><h4>Propuesta y bienvenida</h4>
+        <p>Si es match, te presentamos la propuesta formal y coordinamos tu ingreso. Un buddy te acompaña en tus primeros días.</p></div>
+    </div>
+
+  </section>
+</main>
+
+<div id="arvPanel" role="dialog" aria-modal="true" aria-labelledby="apTitle" hidden>
+  <div class="backdrop" data-close></div>
+  <div class="sheet">
+    <div class="sheet-in">
+      <button class="close" type="button" data-close aria-label="Cerrar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+
+      <span class="eyebrow" style="margin-bottom:18px">Búsqueda abierta</span>
+      <h3 id="apTitle">—</h3>
+      <div class="jtags" id="apTags"></div>
+      <div class="desc" id="apDesc"></div>
+
+      <div class="sep"></div>
+
+      <span class="eyebrow">Postulate</span>
+      <h3 style="font-size:1.45rem;margin:16px 0 26px">Contanos quién sos.</h3>
+
+      <form id="apForm" novalidate>
+        <input type="hidden" name="vacante_id" id="apVacId">
+        <input type="hidden" name="puesto" id="apPuesto">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+
+        <div class="fld">
+          <label class="lb" for="apNombre">Nombre y apellido</label>
+          <input type="text" id="apNombre" name="nombre" autocomplete="name">
+          <div class="err">Contanos tu nombre.</div>
+        </div>
+
+        <div class="fld">
+          <label class="lb" for="apEmail">Email</label>
+          <input type="email" id="apEmail" name="email" autocomplete="email">
+          <div class="err">Ingresá un email válido.</div>
+        </div>
+
+        <div class="fld">
+          <label class="lb" for="apTel">Teléfono</label>
+          <input type="tel" id="apTel" name="telefono" autocomplete="tel" placeholder="Ej.: 299 400 0000">
+        </div>
+
+        <div class="fld">
+          <label class="lb" for="apLinkedin">Perfil de LinkedIn <span style="text-transform:none;letter-spacing:0;color:var(--mist)">(opcional)</span></label>
+          <input type="url" id="apLinkedin" name="linkedin" placeholder="https://www.linkedin.com/in/…">
+        </div>
+
+        <div class="fld" id="apCvFld">
+          <label class="lb">Tu CV</label>
+          <label class="drop" for="apCv">
+            <b id="apCvName">Elegí tu archivo</b>
+            <span>PDF, DOC o DOCX · hasta 4 MB</span>
+            <input type="file" id="apCv" name="cv" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          </label>
+          <div class="err">Necesitamos tu CV para avanzar.</div>
+        </div>
+
+        <div class="fld">
+          <label class="lb" for="apMsg">¿Querés contarnos algo más? <span style="text-transform:none;letter-spacing:0;color:var(--mist)">(opcional)</span></label>
+          <textarea id="apMsg" name="mensaje" placeholder="Por qué te interesa esta búsqueda, qué te gustaría desarrollar…"></textarea>
+        </div>
+
+        <label class="consent" id="apConsentWrap">
+          <input type="checkbox" id="apConsent">
+          <span>Autorizo a Grupo Arvor a tratar mis datos personales con el fin de gestionar mi postulación.</span>
+        </label>
+
+        <label class="consent">
+          <input type="checkbox" name="futuras" value="si" checked>
+          <span>Quiero que guarden mi CV para futuras búsquedas del grupo.</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary send" id="apSend">Enviar mi postulación</button>
+        <div class="formerr" id="apFormErr"></div>
+      </form>
+
+      <div class="thanks">
+        <h4>Recibimos tu postulación.</h4>
+        <p>Ya está en nuestro sistema. El equipo de Talento va a revisar tu perfil y, si avanzás, te contactamos por mail. Gracias por el interés en Grupo Arvor.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <a class="logo-link" href="index.html"><img class="logo-mark" style="height:30px" src="arvor-logo-white.svg" alt="Grupo Arvor"></a>
+      <div class="foot-links">
+        <a href="index.html#grupo">Sobre nosotros</a>
+        <a href="index.html#empresas">Ecosistema</a>
+        <a href="blog.html">Blog</a>
+        <a href="empleos.html">Empleos</a>
+        <a href="index.html#contacto">Contacto</a>
+        <a href="https://www.linkedin.com/company/grupo-arvor/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="foot-base">© <span id="yr"></span> Grupo Arvor · De la Patagonia, hacia el futuro.</div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+<script>
+
+/* ===== Portal de empleos propio · Grupo Arvor ═══════════════════════ */
+(function(){
+  /* ══════════ CONFIGURACIÓN ══════════
+     Nada que completar acá. Las dos rutas son funciones tuyas en Vercel:
+       api/vacantes.js → trae las búsquedas abiertas de PeopleForce
+       api/postular.js → envía las postulaciones a PeopleForce
+     Las claves viven en esas funciones, del lado del servidor. */
+  var PF = {
+    vacantes: '/api/vacantes',
+    endpoint: '/api/postular'
+  };
+  /* ═══════════════════════════════════ */
+
+  var listEl=document.getElementById('jlist'), barEl=document.getElementById('jbar'),
+      countEl=document.getElementById('jcount'), qEl=document.getElementById('jq'),
+      locEl=document.getElementById('jloc'), typeEl=document.getElementById('jtype'),
+      panel=document.getElementById('arvPanel'), VAC=[], ultimoFoco=null;
+
+  var FLECHA='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function nm(v){return (v&&typeof v==='object')?(v.name||v.title||''):(v||'');}
+
+  function norm(r){return{
+    id:r.id,
+    titulo:r.title||r.name||'Posición abierta',
+    loc:nm(r.location)||nm(r.city)||'',
+    tipo:nm(r.employment_type)||nm(r.employment_type_name)||'',
+    area:nm(r.department)||nm(r.division)||'',
+    desc:r.description||r.body||''
+  };}
+
+  function fillSelect(sel,vals){
+    var seen={},out=[];
+    vals.forEach(function(v){if(v&&!seen[v]){seen[v]=1;out.push(v);}});
+    out.sort(function(a,b){return a.localeCompare(b,'es');});
+    out.forEach(function(v){sel.insertAdjacentHTML('beforeend','<option value="'+esc(v)+'">'+esc(v)+'</option>');});
+  }
+
+  function tagsHTML(v){
+    return (v.area?'<span class="jtag area">'+esc(v.area)+'</span>':'')+
+           (v.loc?'<span class="jtag">'+esc(v.loc)+'</span>':'')+
+           (v.tipo?'<span class="jtag">'+esc(v.tipo)+'</span>':'');
+  }
+
+  function render(){
+    var q=qEl.value.trim().toLowerCase();
+    var f=VAC.filter(function(v){
+      return (!q||v.titulo.toLowerCase().indexOf(q)>-1||v.area.toLowerCase().indexOf(q)>-1)
+        &&(!locEl.value||v.loc===locEl.value)
+        &&(!typeEl.value||v.tipo===typeEl.value);
+    });
+    countEl.textContent = f.length===1 ? '1 búsqueda' : f.length+' búsquedas';
+
+    if(!f.length){
+      listEl.innerHTML='<div class="jstate"><h3>No hay búsquedas con esos filtros</h3>'+
+        '<p>Probá ampliando la localidad o la modalidad.</p></div>';
+      return;
+    }
+    listEl.innerHTML=f.map(function(v){
+      return '<button type="button" class="jcard" data-id="'+esc(v.id)+'">'+
+        '<span><h3>'+esc(v.titulo)+'</h3><span class="jtags">'+tagsHTML(v)+'</span></span>'+
+        '<span class="jgo">Ver y postularme '+FLECHA+'</span></button>';
+    }).join('');
+  }
+
+  function estadoVacio(titulo,texto){
+    barEl.hidden=true;
+    listEl.innerHTML='<div class="jstate"><h3>'+titulo+'</h3><p>'+texto+'</p></div>';
+  }
+
+  function cargar(){
+    fetch(PF.vacantes,{headers:{'Accept':'application/json'}})
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+      .then(function(j){
+        var arr=Array.isArray(j)?j:(j.data||j.vacancies||[]);
+        VAC=arr.map(norm);
+        if(!VAC.length){
+          estadoVacio('Hoy no tenemos búsquedas abiertas',
+            'Abrimos posiciones todos los meses. Seguinos en LinkedIn para enterarte apenas publiquemos una nueva.');
+          return;
+        }
+        fillSelect(locEl,VAC.map(function(v){return v.loc;}));
+        fillSelect(typeEl,VAC.map(function(v){return v.tipo;}));
+        barEl.hidden=false;
+        render();
+      })
+      .catch(function(e){
+        console.warn('PeopleForce:',e);
+        estadoVacio('No pudimos cargar las búsquedas',
+          'Estamos trabajando para resolverlo. Probá de nuevo en unos minutos o escribinos desde el formulario de contacto.');
+      });
+  }
+
+  [qEl,locEl,typeEl].forEach(function(el){el.addEventListener('input',render);});
+
+  /* ── panel de vacante ─────────────────────────────────────────── */
+  function abrir(id){
+    var v=null;
+    for(var i=0;i<VAC.length;i++){if(String(VAC[i].id)===String(id)){v=VAC[i];break;}}
+    if(!v) return;
+    ultimoFoco=document.activeElement;
+
+    document.getElementById('apTitle').textContent=v.titulo;
+    document.getElementById('apTags').innerHTML=tagsHTML(v);
+    document.getElementById('apVacId').value=v.id;
+    document.getElementById('apPuesto').value=v.titulo;
+    var descEl=document.getElementById('apDesc');
+    descEl.innerHTML=v.desc||'<p>Escribinos y te contamos más sobre esta posición.</p>';
+
+    panel.classList.remove('sent');
+    document.getElementById('apForm').reset();
+    document.getElementById('apCvName').textContent='Elegí tu archivo';
+    document.getElementById('apFormErr').classList.remove('on');
+    panel.querySelectorAll('.bad').forEach(function(el){el.classList.remove('bad');});
+
+    panel.hidden=false; panel.classList.add('open');
+    document.body.style.overflow='hidden';
+    panel.querySelector('.sheet').scrollTop=0;
+    panel.querySelector('.close').focus();
+
+    if(typeof gtag==='function'){gtag('event','view_vacancy',{puesto:v.titulo});}
+
+    // si la descripción no vino en el listado, la buscamos en el detalle
+    if(!v.desc){
+      fetch(PF.vacantes+'?id='+encodeURIComponent(v.id),{headers:{'Accept':'application/json'}})
+        .then(function(r){return r.ok?r.json():null;})
+        .then(function(j){
+          if(!j) return;
+          var d=(j.data||j);
+          if(d && (d.description||d.body)){v.desc=d.description||d.body;descEl.innerHTML=v.desc;}
+        }).catch(function(){});
+    }
+  }
+
+  function cerrar(){
+    panel.classList.remove('open'); panel.hidden=true;
+    document.body.style.overflow='';
+    if(ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
+  }
+
+  listEl.addEventListener('click',function(e){
+    var c=e.target.closest && e.target.closest('.jcard');
+    if(c) abrir(c.getAttribute('data-id'));
+  });
+  panel.addEventListener('click',function(e){ if(e.target.closest('[data-close]')) cerrar(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && panel.classList.contains('open')) cerrar(); });
+
+  /* ── formulario de postulación ────────────────────────────────── */
+  var form=document.getElementById('apForm'), send=document.getElementById('apSend'),
+      cvInput=document.getElementById('apCv'), cvName=document.getElementById('apCvName'),
+      formErr=document.getElementById('apFormErr'),
+      emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  cvInput.addEventListener('change',function(){
+    var f=cvInput.files[0];
+    cvName.textContent=f?f.name:'Elegí tu archivo';
+    document.getElementById('apCvFld').classList.remove('bad');
+  });
+
+  function mark(el,bad){var f=el.closest('.fld'); if(f) f.classList.toggle('bad',bad);}
+
+  form.addEventListener('input',function(e){
+    var f=e.target.closest('.fld'); if(f) f.classList.remove('bad');
+    if(e.target.id==='apConsent') document.getElementById('apConsentWrap').classList.remove('bad');
+  });
+
+  var MENSAJES={
+    cv_requerido:'Necesitamos tu CV para poder avanzar.',
+    cv_muy_grande:'El archivo supera los 4 MB. Probá con una versión más liviana.',
+    cv_formato:'El CV tiene que estar en PDF, DOC o DOCX.',
+    email_invalido:'Revisá el email, parece que tiene un error.',
+    nombre_requerido:'Nos falta tu nombre.'
+  };
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    formErr.classList.remove('on');
+
+    var ok=true;
+    var nb=!form.nombre.value.trim(); mark(form.nombre,nb); if(nb) ok=false;
+    var eb=!emailRe.test(form.email.value.trim()); mark(form.email,eb); if(eb) ok=false;
+    var cb=!cvInput.files.length;
+    document.getElementById('apCvFld').classList.toggle('bad',cb); if(cb) ok=false;
+    var kb=!document.getElementById('apConsent').checked;
+    document.getElementById('apConsentWrap').classList.toggle('bad',kb); if(kb) ok=false;
+    if(!ok) return;
+
+    send.disabled=true; send.textContent='Enviando…';
+
+    fetch(PF.endpoint,{method:'POST',body:new FormData(form)})
+      .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
+      .then(function(res){
+        if(res.status===200 && res.body && res.body.ok){
+          if(typeof gtag==='function'){
+            gtag('event','generate_lead',{form_name:'postulacion',puesto:document.getElementById('apPuesto').value});
+          }
+          panel.classList.add('sent');
+          panel.querySelector('.sheet').scrollTop=panel.querySelector('.sheet').scrollHeight;
+          return;
+        }
+        var cod=res.body && res.body.error;
+        formErr.textContent = MENSAJES[cod] || 'No pudimos enviar tu postulación. Probá de nuevo en unos minutos.';
+        formErr.classList.add('on');
+        send.disabled=false; send.textContent='Enviar mi postulación';
+      })
+      .catch(function(){
+        formErr.textContent='No pudimos enviar tu postulación. Revisá tu conexión y probá de nuevo.';
+        formErr.classList.add('on');
+        send.disabled=false; send.textContent='Enviar mi postulación';
+      });
+  });
+
+  cargar();
+})();
+
+</script>
+</body>
+</html>
