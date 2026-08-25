@@ -212,25 +212,53 @@ export default async function handler(req) {
     }
   }
 
-  // ── 3 · Vincular el candidato a la vacante ───────────────────────
+  // ── 3 · Asignar el candidato a la vacante ────────────────────────
+  //        La doc de PeopleForce indica usar el parametro "applications"
+  //        sobre el candidato. Se hace en JSON, no en multipart.
+  let vinculo = 'sin vacante';
+
   if (vacanteId && candidatoId) {
+    const idVacante = /^\d+$/.test(vacanteId) ? Number(vacanteId) : vacanteId;
+
+    // Intento A: actualizar el candidato con su seccion de applications
     try {
-      const r2 = await fetch(
-        PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(vacanteId) + '/applications',
-        {
-          method: 'POST',
-          headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ candidate_id: candidatoId })
+      const rA = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
+        method: 'PUT',
+        headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applications: [{ vacancy_id: idVacante }] })
+      });
+      if (rA.ok) {
+        vinculo = 'asignado a la vacante (PUT candidates)';
+      } else {
+        const tA = await rA.text().catch(function () { return ''; });
+        console.warn('PF asignar A', rA.status, tA.slice(0, 300));
+        vinculo = 'PUT candidates fallo ' + rA.status + ': ' + tA.slice(0, 200);
+
+        // Intento B: endpoint de aplicaciones de la vacante
+        const rB = await fetch(
+          PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(vacanteId) + '/applications',
+          {
+            method: 'POST',
+            headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ candidate_id: candidatoId })
+          }
+        );
+        if (rB.ok) {
+          vinculo = 'asignado a la vacante (POST applications)';
+        } else {
+          const tB = await rB.text().catch(function () { return ''; });
+          console.warn('PF asignar B', rB.status, tB.slice(0, 300));
+          vinculo += ' || POST applications fallo ' + rB.status + ': ' + tB.slice(0, 200);
         }
-      );
-      if (!r2.ok) {
-        const d2 = await r2.text().catch(function () { return ''; });
-        console.error('PF application', r2.status, d2);
       }
     } catch (e) {
-      console.error('PF application fetch', e);
+      console.error('PF asignar error', e);
+      vinculo = 'error de red: ' + String(e && e.message ? e.message : e).slice(0, 200);
     }
   }
+
+  return responder({ ok: true, candidato_id: candidatoId, vinculo: vinculo }, 200, origin);
+}
 
   return responder({ ok: true }, 200, origin);
 }
