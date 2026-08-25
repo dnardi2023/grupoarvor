@@ -214,10 +214,8 @@
 <main class="wrap" style="padding-bottom:90px">
   <section id="oportunidades">
 
-    <div class="section-head reveal" style="margin-bottom:38px">
+    <div class="section-head reveal" style="margin-bottom:30px">
       <span class="eyebrow">Búsquedas abiertas</span>
-      <h2>Estas son las posiciones que estamos <span class="grad">buscando hoy</span></h2>
-      <p class="op-sub">Si está publicada acá, está abierta. Elegí la que te interese y postulate sin salir del sitio.</p>
     </div>
 
     <div class="jbar reveal" id="jbar" hidden>
@@ -558,7 +556,12 @@
           return;
         }
         var cod=res.body && res.body.error;
-        formErr.textContent = MENSAJES[cod] || 'No pudimos enviar tu postulación. Probá de nuevo en unos minutos.';
+        var msg = MENSAJES[cod] || 'No pudimos enviar tu postulación. Probá de nuevo en unos minutos.';
+        // Modo diagnóstico: agregando ?debug=1 a la URL se ve el motivo técnico
+        if(location.search.indexOf('debug')>-1 && res.body && res.body.detalle){
+          msg += ' — [DIAGNÓSTICO] ' + res.body.detalle;
+        }
+        formErr.textContent = msg;
         formErr.classList.add('on');
         send.disabled=false; send.textContent='Enviar mi postulación';
       })
