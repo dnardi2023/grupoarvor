@@ -552,6 +552,12 @@
           if(typeof gtag==='function'){
             gtag('event','generate_lead',{form_name:'postulacion',puesto:document.getElementById('apPuesto').value});
           }
+          // Modo diagnóstico: muestra si el candidato quedó asignado a la vacante
+          if(location.search.indexOf('debug')>-1){
+            var t=panel.querySelector('.thanks p');
+            if(t) t.textContent += ' [DIAGNÓSTICO] candidato ' + (res.body.candidato_id||'?') +
+                                   ' · vínculo: ' + (res.body.vinculo||'?');
+          }
           panel.classList.add('sent');
           panel.querySelector('.sheet').scrollTop=panel.querySelector('.sheet').scrollHeight;
           return;
