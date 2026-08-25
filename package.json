@@ -1,0 +1,7 @@
+{
+  "name": "grupoarvor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio institucional de Grupo Arvor y funciones de conexion con PeopleForce"
+}
