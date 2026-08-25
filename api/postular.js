@@ -152,6 +152,7 @@ export default async function handler(req) {
   if (puesto) cuerpo.append('position', puesto);
   if (mensaje) cuerpo.append('cover_letter', mensaje);
   if (fuenteId) cuerpo.append('source_id', String(fuenteId));
+  if (vacanteId) cuerpo.append('applications[][vacancy_id]', String(vacanteId));
   cuerpo.append('resume', cv, cv.name);
 
   let candidatoId = null;
@@ -212,30 +213,37 @@ export default async function handler(req) {
     }
   }
 
-  // ── 3 · Asignar el candidato a la vacante ────────────────────────
-  //        La doc de PeopleForce indica usar el parametro "applications"
-  //        sobre el candidato. Se hace en JSON, no en multipart.
+  // ── 3 · Asignar a la vacante, VERIFICANDO que haya quedado ──────
   let vinculo = 'sin vacante';
+
+  async function estaVinculado() {
+    try {
+      const rv = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
+        headers: { 'X-API-KEY': KEY, 'Accept': 'application/json' }
+      });
+      if (!rv.ok) return false;
+      const jv = await rv.json();
+      const txt = JSON.stringify(jv);
+      return txt.indexOf('"vacancy_id":' + vacanteId) > -1 ||
+             txt.indexOf('"vacancy_id":"' + vacanteId + '"') > -1 ||
+             txt.indexOf('"id":' + vacanteId) > -1;
+    } catch (e) {
+      return false;
+    }
+  }
 
   if (vacanteId && candidatoId) {
     const idVacante = /^\d+$/.test(vacanteId) ? Number(vacanteId) : vacanteId;
+    const notas = [];
 
-    // Intento A: actualizar el candidato con su seccion de applications
-    try {
-      const rA = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
-        method: 'PUT',
-        headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ applications: [{ vacancy_id: idVacante }] })
-      });
-      if (rA.ok) {
-        vinculo = 'asignado a la vacante (PUT candidates)';
-      } else {
-        const tA = await rA.text().catch(function () { return ''; });
-        console.warn('PF asignar A', rA.status, tA.slice(0, 300));
-        vinculo = 'PUT candidates fallo ' + rA.status + ': ' + tA.slice(0, 200);
+    // ¿Ya quedó vinculado al crearlo con applications[][vacancy_id]?
+    let listo = await estaVinculado();
+    if (listo) notas.push('vinculado al crear');
 
-        // Intento B: endpoint de aplicaciones de la vacante
-        const rB = await fetch(
+    // Intento A: endpoint dedicado de aplicaciones de la vacante
+    if (!listo) {
+      try {
+        const rA = await fetch(
           PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(vacanteId) + '/applications',
           {
             method: 'POST',
@@ -243,18 +251,48 @@ export default async function handler(req) {
             body: JSON.stringify({ candidate_id: candidatoId })
           }
         );
-        if (rB.ok) {
-          vinculo = 'asignado a la vacante (POST applications)';
-        } else {
-          const tB = await rB.text().catch(function () { return ''; });
-          console.warn('PF asignar B', rB.status, tB.slice(0, 300));
-          vinculo += ' || POST applications fallo ' + rB.status + ': ' + tB.slice(0, 200);
-        }
+        const tA = await rA.text().catch(function () { return ''; });
+        notas.push('A:POST applications ' + rA.status + ' ' + tA.slice(0, 120));
+        listo = await estaVinculado();
+      } catch (e) {
+        notas.push('A:error ' + String(e && e.message ? e.message : e).slice(0, 80));
       }
-    } catch (e) {
-      console.error('PF asignar error', e);
-      vinculo = 'error de red: ' + String(e && e.message ? e.message : e).slice(0, 200);
     }
+
+    // Intento B: PUT del candidato con la seccion applications
+    if (!listo) {
+      try {
+        const rB = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
+          method: 'PUT',
+          headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ applications: [{ vacancy_id: idVacante }] })
+        });
+        const tB = await rB.text().catch(function () { return ''; });
+        notas.push('B:PUT candidates ' + rB.status + ' ' + tB.slice(0, 120));
+        listo = await estaVinculado();
+      } catch (e) {
+        notas.push('B:error ' + String(e && e.message ? e.message : e).slice(0, 80));
+      }
+    }
+
+    // Intento C: POST de aplicacion incluyendo la etapa inicial
+    if (!listo) {
+      try {
+        const rC = await fetch(PF_BASE + '/recruitment/applications', {
+          method: 'POST',
+          headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ candidate_id: candidatoId, vacancy_id: idVacante })
+        });
+        const tC = await rC.text().catch(function () { return ''; });
+        notas.push('C:POST /applications ' + rC.status + ' ' + tC.slice(0, 120));
+        listo = await estaVinculado();
+      } catch (e) {
+        notas.push('C:error ' + String(e && e.message ? e.message : e).slice(0, 80));
+      }
+    }
+
+    vinculo = (listo ? 'VINCULADO · ' : 'NO VINCULADO · ') + notas.join(' || ');
+    console.log('Vinculo vacante', vinculo);
   }
 
   return responder({ ok: true, candidato_id: candidatoId, vinculo: vinculo }, 200, origin);
