@@ -151,8 +151,6 @@ export default async function handler(req) {
     if (linkedin) pf.append('urls[]', linkedin);
     if (puesto)   pf.append('position', puesto);
     if (mensaje)  pf.append('cover_letter', mensaje);
-    pf.append('consented_at', marcaTemporal);
-    if (futuras) pf.append('future_recruitment_consented_at', marcaTemporal);
     if (fuenteId) pf.append('source_id', String(fuenteId));
     pf.append('resume', cv, cv.name);
     return pf;
@@ -170,14 +168,7 @@ export default async function handler(req) {
 
   let candidatoId = null;
   try {
-    let { r, data } = await crearCandidato(fechaPF(ahora));
-
-    // Si el validador de fechas sigue rechazando, reintenta con sólo la fecha
-    if (r.status === 400 && JSON.stringify(data).indexOf('consented_at') > -1) {
-      console.warn('Reintento con formato de fecha alternativo');
-      ({ r, data } = await crearCandidato(soloFecha(ahora)));
-    }
-
+    const { r, data } = await crearCandidato(fechaPF(ahora));
     candidatoId = (data && data.data && data.data.id) || (data && data.id) || null;
 
     // 422 = PeopleForce detectó un candidato duplicado por email o CV
@@ -200,7 +191,36 @@ export default async function handler(req) {
     }, 502, origin);
   }
 
-  // ── 2 · Vincular el candidato a la vacante ───────────────────────
+  // ── 2 · Registrar los consentimientos (JSON: acá sí parsea las fechas)
+  //        Si falla, se loguea pero NO se le corta la postulación a la persona.
+  if (candidatoId) {
+    const formatos = [
+      new Date(ahora.getTime() - ahora.getMilliseconds()).toISOString().replace('.000', ''),
+      fechaPF(ahora),
+      soloFecha(ahora)
+    ];
+    for (const marca of formatos) {
+      try {
+        const cuerpo = { consented_at: marca };
+        if (futuras) cuerpo.future_recruitment_consented_at = marca;
+        const rc = await fetch(
+          PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId),
+          {
+            method: 'PATCH',
+            headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify(cuerpo)
+          }
+        );
+        if (rc.ok) { console.log('Consentimientos registrados con formato:', marca); break; }
+        const t = await rc.text().catch(() => '');
+        console.warn('Consentimiento rechazado', marca, rc.status, t.slice(0, 200));
+      } catch (e) {
+        console.warn('Consentimiento error', String(e && e.message || e));
+      }
+    }
+  }
+
+  // ── 3 · Vincular el candidato a la vacante ───────────────────────
   if (vacanteId && candidatoId) {
     try {
       const r2 = await fetch(
@@ -218,10 +238,6 @@ export default async function handler(req) {
     } catch (e) {
       console.error('PF application fetch', e);
     }
-  }
-
-  return responder({ ok: true }, 200, origin);
-}
   }
 
   return responder({ ok: true }, 200, origin);
