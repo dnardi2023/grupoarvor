@@ -23,6 +23,18 @@ export const config = { runtime: 'edge' };
 
 const PF_BASE = 'https://app.peopleforce.io/api/public/v3';
 
+// PeopleForce rechaza el ISO con milisegundos. Formato aceptado: "YYYY-MM-DD HH:MM:SS"
+function fechaPF(d) {
+  const p = n => String(n).padStart(2, '0');
+  return d.getUTCFullYear() + '-' + p(d.getUTCMonth() + 1) + '-' + p(d.getUTCDate()) +
+         ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds());
+}
+// Alternativa por si el validador sólo acepta la fecha
+function soloFecha(d) {
+  const p = n => String(n).padStart(2, '0');
+  return d.getUTCFullYear() + '-' + p(d.getUTCMonth() + 1) + '-' + p(d.getUTCDate());
+}
+
 // Nombres aceptados para la fuente del candidato (sin distinguir mayúsculas)
 const NOMBRES_FUENTE = ['website', 'web site', 'sitio web', 'página web', 'pagina web'];
 
@@ -127,32 +139,45 @@ export default async function handler(req) {
     return responder({ ok: false, error: 'cv_formato' }, 422, origin);
   }
 
-  const ahora = new Date().toISOString();
+  const ahora = new Date();
+  const fuenteId = await obtenerFuenteId(KEY);
 
   // ── 1 · Crear el candidato en PeopleForce ────────────────────────
-  const pf = new FormData();
-  pf.append('full_name', nombre);
-  pf.append('email', email);
-  if (telefono) pf.append('phone_numbers[]', telefono);
-  if (linkedin) pf.append('urls[]', linkedin);
-  if (puesto)   pf.append('position', puesto);
-  if (mensaje)  pf.append('cover_letter', mensaje);
-  pf.append('consented_at', ahora);
+  function armarCuerpo(marcaTemporal) {
+    const pf = new FormData();
+    pf.append('full_name', nombre);
+    pf.append('email', email);
+    if (telefono) pf.append('phone_numbers[]', telefono);
+    if (linkedin) pf.append('urls[]', linkedin);
+    if (puesto)   pf.append('position', puesto);
+    if (mensaje)  pf.append('cover_letter', mensaje);
+    pf.append('consented_at', marcaTemporal);
+    if (futuras) pf.append('future_recruitment_consented_at', marcaTemporal);
+    if (fuenteId) pf.append('source_id', String(fuenteId));
+    pf.append('resume', cv, cv.name);
+    return pf;
+  }
 
-  const fuenteId = await obtenerFuenteId(KEY);
-  if (fuenteId) pf.append('source_id', String(fuenteId));
-
-  if (futuras) pf.append('future_recruitment_consented_at', ahora);
-  pf.append('resume', cv, cv.name);
+  async function crearCandidato(marcaTemporal) {
+    const resp = await fetch(PF_BASE + '/recruitment/candidates', {
+      method: 'POST',
+      headers: { 'X-API-KEY': KEY },
+      body: armarCuerpo(marcaTemporal)
+    });
+    const cuerpo = await resp.json().catch(() => ({}));
+    return { r: resp, data: cuerpo };
+  }
 
   let candidatoId = null;
   try {
-    const r = await fetch(PF_BASE + '/recruitment/candidates', {
-      method: 'POST',
-      headers: { 'X-API-KEY': KEY },
-      body: pf
-    });
-    const data = await r.json().catch(() => ({}));
+    let { r, data } = await crearCandidato(fechaPF(ahora));
+
+    // Si el validador de fechas sigue rechazando, reintenta con sólo la fecha
+    if (r.status === 400 && JSON.stringify(data).indexOf('consented_at') > -1) {
+      console.warn('Reintento con formato de fecha alternativo');
+      ({ r, data } = await crearCandidato(soloFecha(ahora)));
+    }
+
     candidatoId = (data && data.data && data.data.id) || (data && data.id) || null;
 
     // 422 = PeopleForce detectó un candidato duplicado por email o CV
@@ -193,6 +218,10 @@ export default async function handler(req) {
     } catch (e) {
       console.error('PF application fetch', e);
     }
+  }
+
+  return responder({ ok: true }, 200, origin);
+}
   }
 
   return responder({ ok: true }, 200, origin);
