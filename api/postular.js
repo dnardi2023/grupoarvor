@@ -152,7 +152,6 @@ export default async function handler(req) {
   if (puesto) cuerpo.append('position', puesto);
   if (mensaje) cuerpo.append('cover_letter', mensaje);
   if (fuenteId) cuerpo.append('source_id', String(fuenteId));
-  if (vacanteId) cuerpo.append('applications[][vacancy_id]', String(vacanteId));
   cuerpo.append('resume', cv, cv.name);
 
   let candidatoId = null;
@@ -213,85 +212,76 @@ export default async function handler(req) {
     }
   }
 
-  // ── 3 · Asignar a la vacante, VERIFICANDO que haya quedado ──────
+  // ── 3 · Crear la aplicación en la vacante ────────────────────────
+  //  Endpoint: POST /recruitment/vacancies/{vacancy_id}/applications
+  //  Campos obligatorios: applicant_id (el candidato) y applicant_state_id
+  //  (la etapa del pipeline). Hay que averiguar la etapa inicial primero.
   let vinculo = 'sin vacante';
 
-  async function estaVinculado() {
+  if (vacanteId && candidatoId) {
+    const notas = [];
+    let idVacante = /^\d+$/.test(vacanteId) ? Number(vacanteId) : vacanteId;
+    let etapaId = null;
+
+    // 3.1 · Traer la vacante desde la API de compañía y sacar la etapa inicial
     try {
-      const rv = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
+      const rv = await fetch(PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(idVacante), {
         headers: { 'X-API-KEY': KEY, 'Accept': 'application/json' }
       });
-      if (!rv.ok) return false;
-      const jv = await rv.json();
-      const txt = JSON.stringify(jv);
-      return txt.indexOf('"vacancy_id":' + vacanteId) > -1 ||
-             txt.indexOf('"vacancy_id":"' + vacanteId + '"') > -1 ||
-             txt.indexOf('"id":' + vacanteId) > -1;
+      if (rv.ok) {
+        const jv = await rv.json();
+        const v = jv && jv.data ? jv.data : jv;
+        const etapas = (v && (v.applicant_states || v.stages ||
+                       (v.pipeline && v.pipeline.applicant_states) ||
+                       (v.pipeline && v.pipeline.stages))) || [];
+        if (etapas.length) etapaId = etapas[0].id;
+        notas.push('vacante OK, etapas=' + etapas.length + ' etapa1=' + etapaId);
+      } else {
+        notas.push('GET vacante ' + rv.status);
+      }
     } catch (e) {
-      return false;
-    }
-  }
-
-  if (vacanteId && candidatoId) {
-    const idVacante = /^\d+$/.test(vacanteId) ? Number(vacanteId) : vacanteId;
-    const notas = [];
-
-    // ¿Ya quedó vinculado al crearlo con applications[][vacancy_id]?
-    let listo = await estaVinculado();
-    if (listo) notas.push('vinculado al crear');
-
-    // Intento A: endpoint dedicado de aplicaciones de la vacante
-    if (!listo) {
-      try {
-        const rA = await fetch(
-          PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(vacanteId) + '/applications',
-          {
-            method: 'POST',
-            headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ candidate_id: candidatoId })
-          }
-        );
-        const tA = await rA.text().catch(function () { return ''; });
-        notas.push('A:POST applications ' + rA.status + ' ' + tA.slice(0, 120));
-        listo = await estaVinculado();
-      } catch (e) {
-        notas.push('A:error ' + String(e && e.message ? e.message : e).slice(0, 80));
-      }
+      notas.push('GET vacante error');
     }
 
-    // Intento B: PUT del candidato con la seccion applications
-    if (!listo) {
+    // 3.2 · Si no salió, buscar la etapa en las estadísticas del pipeline
+    if (!etapaId) {
       try {
-        const rB = await fetch(PF_BASE + '/recruitment/candidates/' + encodeURIComponent(candidatoId), {
-          method: 'PUT',
-          headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ applications: [{ vacancy_id: idVacante }] })
+        const rp = await fetch(PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(idVacante) + '/pipeline_stats', {
+          headers: { 'X-API-KEY': KEY, 'Accept': 'application/json' }
         });
-        const tB = await rB.text().catch(function () { return ''; });
-        notas.push('B:PUT candidates ' + rB.status + ' ' + tB.slice(0, 120));
-        listo = await estaVinculado();
+        if (rp.ok) {
+          const jp = await rp.json();
+          const arr = (jp && jp.data) || jp || [];
+          if (arr.length && arr[0].id) etapaId = arr[0].id;
+          notas.push('pipeline_stats etapa1=' + etapaId);
+        } else {
+          notas.push('pipeline_stats ' + rp.status);
+        }
       } catch (e) {
-        notas.push('B:error ' + String(e && e.message ? e.message : e).slice(0, 80));
+        notas.push('pipeline_stats error');
       }
     }
 
-    // Intento C: POST de aplicacion incluyendo la etapa inicial
-    if (!listo) {
-      try {
-        const rC = await fetch(PF_BASE + '/recruitment/applications', {
+    // 3.3 · Crear la aplicación con los campos que pide la documentación
+    try {
+      const payload = { applicant_id: candidatoId };
+      if (etapaId) payload.applicant_state_id = etapaId;
+      const ra = await fetch(
+        PF_BASE + '/recruitment/vacancies/' + encodeURIComponent(idVacante) + '/applications',
+        {
           method: 'POST',
           headers: { 'X-API-KEY': KEY, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ candidate_id: candidatoId, vacancy_id: idVacante })
-        });
-        const tC = await rC.text().catch(function () { return ''; });
-        notas.push('C:POST /applications ' + rC.status + ' ' + tC.slice(0, 120));
-        listo = await estaVinculado();
-      } catch (e) {
-        notas.push('C:error ' + String(e && e.message ? e.message : e).slice(0, 80));
-      }
+          body: JSON.stringify(payload)
+        }
+      );
+      const ta = await ra.text().catch(function () { return ''; });
+      notas.push('POST applications ' + ra.status + ' ' + ta.slice(0, 200));
+      vinculo = (ra.ok ? 'VINCULADO · ' : 'NO VINCULADO · ') + notas.join(' || ');
+    } catch (e) {
+      notas.push('POST error ' + String(e && e.message ? e.message : e).slice(0, 100));
+      vinculo = 'NO VINCULADO · ' + notas.join(' || ');
     }
 
-    vinculo = (listo ? 'VINCULADO · ' : 'NO VINCULADO · ') + notas.join(' || ');
     console.log('Vinculo vacante', vinculo);
   }
 
