@@ -99,11 +99,8 @@ export default async function handler(req) {
 
   const KEY = process.env.PEOPLEFORCE_COMPANY_KEY;
   if (!KEY) {
-    return responder({
-      ok: false,
-      error: 'config',
-      detalle: 'Falta la variable PEOPLEFORCE_COMPANY_KEY en Vercel, o no se redesplego despues de cargarla.'
-    }, 500, origin);
+    console.error('Falta PEOPLEFORCE_COMPANY_KEY en las variables de entorno');
+    return responder({ ok: false, error: 'config' }, 500, origin);
   }
 
   let entrada;
@@ -172,21 +169,11 @@ export default async function handler(req) {
     // 422 = duplicado detectado por email o CV: PeopleForce actualiza el existente
     if (!r.ok && r.status !== 422) {
       console.error('PF candidates', r.status, JSON.stringify(data));
-      let pista = 'PeopleForce respondio ' + r.status + '. ';
-      if (r.status === 401) pista += 'La Company API key es invalida o esta desactivada.';
-      else if (r.status === 403) pista += 'La clave no tiene permisos, o el plan no habilita la API.';
-      else if (r.status === 404) pista += 'La ruta del endpoint no existe.';
-      else if (r.status === 429) pista += 'Demasiadas llamadas seguidas, espera un minuto.';
-      else pista += 'Detalle: ' + JSON.stringify(data).slice(0, 300);
-      return responder({ ok: false, error: 'peopleforce', status: r.status, detalle: pista }, 502, origin);
+      return responder({ ok: false, error: 'peopleforce' }, 502, origin);
     }
   } catch (e) {
     console.error('PF candidates fetch', e);
-    return responder({
-      ok: false,
-      error: 'peopleforce',
-      detalle: 'No se pudo contactar a PeopleForce: ' + String(e && e.message ? e.message : e).slice(0, 300)
-    }, 502, origin);
+    return responder({ ok: false, error: 'peopleforce' }, 502, origin);
   }
 
   // ── 2 · Registrar consentimientos (en JSON, no en multipart) ─────
@@ -285,5 +272,5 @@ export default async function handler(req) {
     console.log('Vinculo vacante', vinculo);
   }
 
-  return responder({ ok: true, candidato_id: candidatoId, vinculo: vinculo }, 200, origin);
+  return responder({ ok: true }, 200, origin);
 }
